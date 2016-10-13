@@ -20,6 +20,7 @@ namespace FL
             {
                 Label1.Text = "Välkommen";
                 Session["knappTryck"] = 0;
+
             }
 
         }
