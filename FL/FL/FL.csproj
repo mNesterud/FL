@@ -57,11 +57,20 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bilar.aspx" />
     <Content Include="index.aspx" />
     <Content Include="sida2.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bilar.aspx.cs">
+      <DependentUpon>bilar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="bilar.aspx.designer.cs">
+      <DependentUpon>bilar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Bil.cs" />
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
