@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bilar>
+  <bil id="1">
+    <märke>SAAB</märke>
+    <modell>900</modell>
+  </bil>
+  <bil>
+    <märke>Volvo</märke>
+    <modell>V70</modell>
+  </bil>
+  <bil>
+    <märke>Audi</märke>
+    <modell>TT</modell>
+  </bil>
+  <bil>
+    <märke>Porsche</märke>
+    <modell>Carerra</modell>
+  </bil>
+  <bil>
+    <märke>Chevrolet</märke>
+    <modell>Impala</modell>
+  </bil>
+  <bil>
+    <märke>Ford</märke>
+    <modell>Mondeo</modell>
+  </bil>
+  <bil>
+    <märke>BMW</märke>
+    <modell>X5</modell>
+  </bil>
+  <bil>
+    <märke>Seat</märke>
+    <modell>Leon</modell>
+  </bil>
+  <bil>
+    <märke>Seat</märke>
+    <modell>Ibiza</modell>
+  </bil>
+</bilar>

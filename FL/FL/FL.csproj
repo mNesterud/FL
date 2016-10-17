@@ -61,6 +61,7 @@
     <Content Include="index.aspx" />
     <Content Include="sida2.aspx" />
     <Content Include="Web.config" />
+    <Content Include="bilar.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bilar.aspx.cs">

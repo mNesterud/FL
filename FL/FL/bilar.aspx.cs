@@ -9,39 +9,96 @@ using System.Diagnostics;
 using System.Configuration;
 using System.Globalization;
 using System.Threading;
+using System.Xml;
 
 namespace FL
 {
     public partial class bilar : System.Web.UI.Page
     {
-        List<Bil> bilLista = new List<Bil>();
+        //List<Bil> bilLista = new List<Bil>();
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (Session["bilar"] != null)
-            //{
-            //    bilLista = (List<Bil>)Session["bilar"];
-            //}
-            
+            if (!IsPostBack)
+            {
+                AppendCars(XmlToList());
+            }
 
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            Bil b = new Bil();
-            b.märke = txtMake.Text;
-            b.modell = txtModel.Text;
-            bilLista.Add(b);
-            //Session["bilar"] = bilLista;
+            string path = Server.MapPath("bilar.xml");
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
 
-            foreach (Bil B in bilLista)
-            {
-                HtmlGenericControl div = new HtmlGenericControl("div");
-                div.InnerHtml = B.märke + " " + B.modell;
-                allabilar.Controls.Add(div);
-            }
+            XmlNode root = doc.DocumentElement;
 
+            XmlElement newCar = doc.CreateElement("bil");
 
+            XmlElement make = doc.CreateElement("märke");
+            make.InnerText = txtMake.Text;
+            XmlElement model = doc.CreateElement("modell");
+            model.InnerText = txtModel.Text;
+
+            newCar.AppendChild(make);
+            newCar.AppendChild(model);
+            root.AppendChild(newCar);
+
+            doc.Save(path);
+
+            AppendCars(XmlToList());
 
         }
+        public void XmlSwitchCase()
+        {
+            string bilar = "";
+
+            string path = Server.MapPath("bilar.xml");
+
+            XmlTextReader xreader = new XmlTextReader(path);
+
+            while (xreader.Read())
+            {
+                switch (xreader.Name)
+                {
+                    case "märke":
+                        bilar += xreader.ReadString() +" ";
+                        break;
+                }
+            }
+
+            allamärken.InnerHtml = bilar;
+        }
+        public void AppendCars(List<Bil> bilLista)
+        {
+            foreach (Bil b in bilLista)
+            {
+                HtmlGenericControl div = new HtmlGenericControl("div");
+                div.InnerText = b.märke + " " + b.modell;
+                allabilar.Controls.Add(div);
+            }
+        }
+        public List<Bil> XmlToList()
+        {
+            List<Bil> bilLista = new List<Bil>();
+
+            string path = Server.MapPath("bilar.xml");
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+
+            XmlNodeList allCars = doc.SelectNodes("/bilar/bil");
+
+            foreach (XmlNode node in allCars)
+            {
+                Bil b = new Bil();
+                b.märke = node["märke"].InnerText;
+                b.modell = node["modell"].InnerText;
+                bilLista.Add(b);
+
+            }
+
+            return bilLista;
+        }
+
     }
 }
