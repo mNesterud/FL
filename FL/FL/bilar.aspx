@@ -10,5 +10,5 @@
         <asp:Button ID="btnSave" runat="server" Text="Button" OnClick="btnSave_Click" />
     </div>
     <div id="allabilar" runat="server"></div>
-    <div id="allamärken" runat="server"></div>
+    <div id="allamärken" runat="server" ></div>
 </asp:Content>

@@ -10,11 +10,13 @@ using System.Configuration;
 using System.Globalization;
 using System.Threading;
 using System.Xml;
+using Npgsql;
 
 namespace FL
 {
     public partial class bilar : System.Web.UI.Page
     {
+        string uId = Session
         //List<Bil> bilLista = new List<Bil>();
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -107,6 +109,29 @@ namespace FL
             }
 
             return bilLista;
+        }
+
+        public XmlDocument dbToXml()
+        {
+
+
+            NpgsqlConnection conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["xmlDB"].ConnectionString);
+            string getUser = "SELECT * FROM userxml WHERE id = @uID";
+
+
+            NpgsqlCommand cmd = new NpgsqlCommand(getUser, conn);
+            cmd.Parameters.AddWithValue("uID", Convert.ToInt16(uID));
+            conn.Open();
+
+            NpgsqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.Read())
+            {
+                if (dr["xmlstring"] == null)
+                {
+
+                }
+            }
         }
 
     }
