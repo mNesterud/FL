@@ -48,6 +48,8 @@ namespace FL
 
             AppendCars(XmlToList());
 
+            Response.Redirect("bilar.aspx");
+
         }
         public void XmlSwitchCase()
         {
@@ -74,7 +76,14 @@ namespace FL
             foreach (Bil b in bilLista)
             {
                 HtmlGenericControl div = new HtmlGenericControl("div");
-                div.InnerText = b.märke + " " + b.modell;
+                //div.InnerText = b.märke + " " + b.modell;
+                //div.InnerHtml = "<div>" + b.märke + "</div>";
+                div.Attributes.Add("class", "biltext");
+                
+                HtmlGenericControl innerdiv = new HtmlGenericControl("div");
+                innerdiv.InnerText = b.märke + " " + b.modell;
+                div.Controls.Add(innerdiv);
+
                 allabilar.Controls.Add(div);
             }
         }
@@ -86,7 +95,7 @@ namespace FL
             XmlDocument doc = new XmlDocument();
             doc.Load(path);
 
-            XmlNodeList allCars = doc.SelectNodes("/bilar/bil");
+            XmlNodeList allCars = doc.SelectNodes("/garage/garageport/bil");
 
             foreach (XmlNode node in allCars)
             {

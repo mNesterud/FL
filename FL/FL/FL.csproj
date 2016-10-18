@@ -59,6 +59,8 @@
   <ItemGroup>
     <Content Include="bilar.aspx" />
     <Content Include="index.aspx" />
+    <Content Include="main.css" />
+    <Content Include="script.js" />
     <Content Include="sida2.aspx" />
     <Content Include="Web.config" />
     <Content Include="bilar.xml" />
