@@ -20,23 +20,8 @@ namespace FL
             string uID = e.CommandArgument.ToString();
             Session["uID"] = uID;
 
-            NpgsqlConnection conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["xmlDB"].ConnectionString);
-            string getUser = "SELECT * FROM userxml WHERE id = @uID";
-
-
-            NpgsqlCommand cmd = new NpgsqlCommand(getUser, conn);
-            cmd.Parameters.AddWithValue("uID", Convert.ToInt16(uID));
-            conn.Open();
-
-            NpgsqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.Read())
-            {
-                if (dr["xmlstring"] == null)
-                {
-
-                }
-            }
+            Response.Redirect("bilar.aspx");
+          
 
         }
     }

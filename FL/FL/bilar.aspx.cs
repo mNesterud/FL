@@ -16,39 +16,43 @@ namespace FL
 {
     public partial class bilar : System.Web.UI.Page
     {
-        string uId = Session
+        string uID;
         //List<Bil> bilLista = new List<Bil>();
         protected void Page_Load(object sender, EventArgs e)
         {
+            uID = (string)Session["uID"];
+            DbToXml();
             if (!IsPostBack)
             {
-                AppendCars(XmlToList());
+                AppendCars(XmlToList(DbToXml()));
             }
 
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            string path = Server.MapPath("bilar.xml");
-            XmlDocument doc = new XmlDocument();
-            doc.Load(path);
+            //string path = Server.MapPath("bilar.xml");
+            //XmlDocument doc = new XmlDocument();
+            //doc.Load(path);
 
-            XmlNode root = doc.DocumentElement;
+            //XmlNode root = doc.DocumentElement;
 
-            XmlElement newCar = doc.CreateElement("bil");
+            //XmlElement newCar = doc.CreateElement("bil");
 
-            XmlElement make = doc.CreateElement("märke");
-            make.InnerText = txtMake.Text;
-            XmlElement model = doc.CreateElement("modell");
-            model.InnerText = txtModel.Text;
+            //XmlElement make = doc.CreateElement("märke");
+            //make.InnerText = txtMake.Text;
+            //XmlElement model = doc.CreateElement("modell");
+            //model.InnerText = txtModel.Text;
 
-            newCar.AppendChild(make);
-            newCar.AppendChild(model);
-            root.AppendChild(newCar);
+            //newCar.AppendChild(make);
+            //newCar.AppendChild(model);
+            //root.AppendChild(newCar);
 
-            doc.Save(path);
+            //doc.Save(path);
 
-            AppendCars(XmlToList());
+            ////AppendCars(XmlToList());
+
+            XmlToDb();
 
             Response.Redirect("bilar.aspx");
 
@@ -89,15 +93,15 @@ namespace FL
                 allabilar.Controls.Add(div);
             }
         }
-        public List<Bil> XmlToList()
+        public List<Bil> XmlToList(XmlDocument xmldoc)
         {
             List<Bil> bilLista = new List<Bil>();
 
-            string path = Server.MapPath("bilar.xml");
-            XmlDocument doc = new XmlDocument();
-            doc.Load(path);
+            //string path = Server.MapPath("bilar.xml");
+            XmlDocument doc = xmldoc;
+            //doc.Load(path);
 
-            XmlNodeList allCars = doc.SelectNodes("/garage/garageport/bil");
+            XmlNodeList allCars = doc.SelectNodes("/bilar/bil");
 
             foreach (XmlNode node in allCars)
             {
@@ -111,27 +115,71 @@ namespace FL
             return bilLista;
         }
 
-        public XmlDocument dbToXml()
+        public XmlDocument DbToXml()
         {
-
+            XmlDocument doc = new XmlDocument();
 
             NpgsqlConnection conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["xmlDB"].ConnectionString);
             string getUser = "SELECT * FROM userxml WHERE id = @uID";
+            
 
 
             NpgsqlCommand cmd = new NpgsqlCommand(getUser, conn);
             cmd.Parameters.AddWithValue("uID", Convert.ToInt16(uID));
+
+
+
             conn.Open();
 
             NpgsqlDataReader dr = cmd.ExecuteReader();
 
             if (dr.Read())
             {
-                if (dr["xmlstring"] == null)
+                if (dr["xmlstring"].ToString() != "")
                 {
-
+                    doc.LoadXml(dr["xmlstring"].ToString());
+                    
+                }
+                else
+                {
+                    string path = Server.MapPath("bilar.xml");
+                    doc.Load(path);
                 }
             }
+            conn.Close();
+
+            return doc;
+        }
+        public void XmlToDb()
+        {
+            XmlDocument doc = DbToXml();
+
+            XmlNode root = doc.DocumentElement;
+
+            XmlElement newCar = doc.CreateElement("bil");
+
+            XmlElement make = doc.CreateElement("märke");
+            make.InnerText = txtMake.Text;
+            XmlElement model = doc.CreateElement("modell");
+            model.InnerText = txtModel.Text;
+
+            newCar.AppendChild(make);
+            newCar.AppendChild(model);
+            root.AppendChild(newCar);
+
+            string xmlstring = doc.OuterXml;
+
+
+            NpgsqlConnection conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["xmlDB"].ConnectionString);
+            string setXml = "UPDATE userxml SET xmlstring = @xmlString WHERE id=@uID";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(setXml, conn);
+            cmd.Parameters.AddWithValue("xmlString", xmlstring);
+            cmd.Parameters.AddWithValue("uID", Convert.ToInt16(uID));
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
 
     }
